@@ -1,0 +1,37 @@
+CipherShare performance benchmark
+captured: 28 October 2026 | protocol: Stage I report section 5.4
+environment: Fedora Linux 44, Python 3.13.12, Node 22.23.1 WebCrypto harness,
+  uvicorn single process on 127.0.0.1:8000 (localhost, plain HTTP)
+method: the production crypto module (static/crypto.js) executed under Node's
+  WebCrypto; fresh AES-256-GCM key, nonce, and share per run; 3 runs per size,
+  median reported; every recovered payload byte-compared against the original.
+caveats: localhost round-trip (no network/TLS); Node WebCrypto timings are a
+  compatibility harness, not a browser tab; single-process server, no concurrency.
+
+SIZE 100 KB (102400 bytes, ciphertext 102416)
+  runs: #1 total 99 ms, #2 total 30 ms, #3 total 27 ms
+  median encrypt : 0.3 ms  (339.1 MB/s plaintext)
+  median upload  : 22.2 ms  (4.6 MB/s ciphertext)
+  median download: 6.8 ms  (15.0 MB/s ciphertext)
+  median decrypt : 0.6 ms  (163.5 MB/s plaintext)
+  median total   : 30.0 ms
+  integrity      : true (all runs byte-verified)
+RUN_DONE 100 KB
+SIZE 1 MB (1048576 bytes, ciphertext 1048592)
+  runs: #1 total 35 ms, #2 total 41 ms, #3 total 38 ms
+  median encrypt : 1.1 ms  (983.0 MB/s plaintext)
+  median upload  : 27.2 ms  (38.6 MB/s ciphertext)
+  median download: 8.3 ms  (126.4 MB/s ciphertext)
+  median decrypt : 1.7 ms  (634.6 MB/s plaintext)
+  median total   : 38.2 ms
+  integrity      : true (all runs byte-verified)
+RUN_DONE 1 MB
+SIZE 10 MB (10485760 bytes, ciphertext 10485776)
+  runs: #1 total 191 ms, #2 total 220 ms, #3 total 224 ms
+  median encrypt : 12.4 ms  (842.5 MB/s plaintext)
+  median upload  : 156.2 ms  (67.1 MB/s ciphertext)
+  median download: 37.9 ms  (276.6 MB/s ciphertext)
+  median decrypt : 12.1 ms  (865.4 MB/s plaintext)
+  median total   : 220.4 ms
+  integrity      : true (all runs byte-verified)
+RUN_DONE 10 MB

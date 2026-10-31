@@ -1,0 +1,18 @@
+CipherShare Stage I - tamper and wrong-key rejection
+Captured: 20 October 2026
+Command: node --test --test-name-pattern='tampered|truncated|modified nonce|wrong key' tests/crypto.test.mjs
+
+TAP version 13
+ok 1 - tampered ciphertext is rejected
+ok 2 - tampered tag is rejected
+ok 3 - truncated ciphertext is rejected
+ok 4 - modified nonce is rejected
+ok 5 - wrong key is rejected
+1..5
+# tests 5
+# pass 5
+# fail 0
+
+Result:
+  Data-byte, tag-byte, truncation, and nonce modifications all fail closed.
+  The wrong-key case also fails closed with no plaintext output.

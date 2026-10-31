@@ -1,0 +1,16 @@
+CipherShare Stage I - Node crypto round trips
+Captured: 20 October 2026
+Command: node --test --test-name-pattern='preserves' tests/crypto.test.mjs
+
+TAP version 13
+ok 1 - text file round trip preserves exact bytes
+ok 2 - binary file round trip preserves exact bytes
+ok 3 - empty file round trip preserves zero length
+1..3
+# tests 3
+# pass 3
+# fail 0
+
+Result:
+  Text, binary, and empty inputs round-trip exactly. The empty input produces
+  a 16-byte ciphertext, consistent with the GCM tag.

@@ -1,0 +1,5 @@
+create share:    HTTP 201 {'share_id': 'Q56-ML8xH3i_xq2-SFLD_X9tTzbrLQ9f', 'expires_at': 1792482813}
+before expiry:   HTTP 200
+after expiry:    HTTP 410 {'detail': 'share expired or revoked'}
+unknown share:   HTTP 404 {'detail': 'share not found'}
+malformed id:    HTTP 400 {'detail': 'invalid share id'}

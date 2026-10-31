@@ -1,0 +1,43 @@
+CipherShare final build - authorized share with password split and recipients
+Captured: 28 October 2026 (final build: salt, KDF iterations, recipient tokens in the API)
+
+Request (multipart): ciphertext + nonce + filename + mime_type + lifetime_seconds
+                     + salt (nSMZVhIqfLeQgaok1wxB0A) + kdf_iterations (600000)
+                     + recipients (Priya, Ashwin)
+
+Response:
+{
+ "share_id": "jWFw83rQZSemPada-mPIftiDuXd2S4gL",
+ "expires_at": 1793230532,
+ "password_protected": true,
+ "recipients": [
+  {
+   "name": "Ashwin",
+   "token": "8zNVWTisXkpWGjvaN08_vw"
+  },
+  {
+   "name": "Priya",
+   "token": "cmFngCAC71zKaxShzL0zww"
+  }
+ ]
+}
+
+Download response headers:
+  content-disposition: attachment; filename="final-report-excerpt.pdf"
+  x-nonce: sgmVIREmsFPiC9rt
+  x-salt: nSMZVhIqfLeQgaok1wxB0A
+  x-kdf-iterations: 600000
+  x-expires-at: 1793230532
+  cache-control: no-store
+  referrer-policy: no-referrer
+
+Reconstruction and decryption (fixture harness):
+  K = R XOR W  (W = PBKDF2-HMAC-SHA-256, 600000 rounds)
+  decrypted 200016 bytes -> 200000 bytes
+  SHA-256 original:  d3c7453a29f854ac8f3935312a653e2170f7e8493017d1704443cb87c43bc734
+  SHA-256 recovered: d3c7453a29f854ac8f3935312a653e2170f7e8493017d1704443cb87c43bc734
+  digests match: True
+
+Note: the response carries password_protected and per-recipient tokens. The
+fragment carries only the link half R and the marking token. The server never
+receives K, W, or the password.

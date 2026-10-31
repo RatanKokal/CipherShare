@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CipherShare — encrypted file sharing</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/static/style.css?v=3">
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <h1>CipherShare</h1>
+      <p class="tagline">
+        End-to-end encrypted file sharing with expiring links.
+        Your browser encrypts; the server only ever stores ciphertext.
+      </p>
+    </header>
+
+    <section id="sender-panel" class="card" hidden>
+      <h2>Share a file</h2>
+
+      <label class="field">
+        <span>File (up to 10 MB)</span>
+        <input type="file" id="file-input">
+      </label>
+
+      <label class="field">
+        <span>Share password (optional)</span>
+        <input type="password" id="password-input" autocomplete="new-password"
+               placeholder="Leave blank for a plain expiring link">
+        <small>
+          The key is split: half stays in the link, half is derived from this
+          password. A leaked link alone cannot decrypt. Send the password
+          through a different channel than the link.
+        </small>
+      </label>
+
+      <label class="field">
+        <span>Link expires after</span>
+        <select id="lifetime-input">
+          <option value="300">5 minutes</option>
+          <option value="600" selected>10 minutes</option>
+          <option value="3600">1 hour</option>
+          <option value="21600">6 hours</option>
+          <option value="86400">24 hours</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Recipients for leak tracing (optional, one per line, max 20)</span>
+        <textarea id="recipients-input" rows="3"
+                  placeholder="e.g. Ashwin&#10;Priya"></textarea>
+        <small>
+          Each recipient gets a personalized link; their downloaded copy carries a
+          unique invisible mark, so a leaked copy can be traced back to them.
+        </small>
+      </label>
+
+      <button id="share-button" type="button">Encrypt &amp; upload</button>
+      <div id="share-status" class="status" role="status" hidden></div>
+
+      <div id="share-result" class="result" hidden>
+        <div id="generic-link-block">
+          <label for="share-link">Share link (the key lives in the part after #)</label>
+          <div class="link-row">
+            <input id="share-link" readonly>
+            <button id="copy-button" type="button">Copy</button>
+          </div>
+        </div>
+        <div id="recipient-links"></div>
+        <p id="share-warning" class="warning"></p>
+      </div>
+    </section>
+
+    <section id="recipient-panel" class="card" hidden>
+      <h2>Open a shared file</h2>
+      <p id="recipient-share-id" class="share-id"></p>
+
+      <label class="field" id="recipient-password-field">
+        <span>Share password (if the sender set one)</span>
+        <input type="password" id="recipient-password" autocomplete="off">
+        <small>Ask the sender for the password through a different channel than this link.</small>
+      </label>
+
+      <button id="download-button" type="button">Download &amp; decrypt</button>
+      <div id="recipient-status" class="status" role="status" hidden></div>
+    </section>
+
+    <footer>
+      <p>
+        Ciphertext-only storage, server-enforced expiry, optional password-split keys.
+      </p>
+    </footer>
+  </main>
+  <script type="module" src="/static/app.js?v=3"></script>
+</body>
+</html>

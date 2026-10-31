@@ -1,0 +1,12 @@
+CipherShare tracer: dummy-poster.png
+candidates: 4 registered token(s)
+mark type: image LSB (900x600)
+accused: Priya (share Y746EJ3jxWgYaMsPFeymzdHup-gsWsho, token-registered, score 490.7, threshold 96)
+
+Integrity and invisibility check (same capture):
+  - The browser-downloaded marked copy was byte-compared against the
+    original dummy-poster.png: 726 of 540,000 pixels differ (0.134%),
+    all in the lowest bit of RGB channels. The copies are visually
+    identical.
+  - The tracer scored 4 registered tokens across all shares and
+    correctly reported the matching one (global-registry scoring).

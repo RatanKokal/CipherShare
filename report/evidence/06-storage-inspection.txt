@@ -1,0 +1,26 @@
+CipherShare final build - storage inspection
+Captured: 28 October 2026 (current schema)
+
+shares table columns: share_id, ciphertext_path, nonce_b64, original_filename, mime_type, created_at, expires_at, revoked, salt_b64, kdf_iterations
+recipients table columns: share_id, label, display_name, created_at, token
+  (recipients.token is a marking credential, UNIQUE per row)
+
+Stored share metadata:
+  share_id          = jWFw83rQZSemPada-mPIftiDuXd2S4gL
+  nonce_b64         = sgmVIREmsFPiC9rt
+  salt_b64          = nSMZVhIqfLeQgaok1wxB0A   (public KDF parameter)
+  kdf_iterations    = 600000
+  original_filename = final-report-excerpt.pdf
+  expires_at        = 1793230532
+  revoked           = 0
+
+Registered recipients (marking tokens):
+  Ashwin   token = 8zNVWTisXkpWGjvaN08_vw
+  Priya    token = cmFngCAC71zKaxShzL0zww
+
+Stored ciphertext: data/ciphertext/jWFw83rQZSemPada-mPIftiDuXd2S4gL.bin (200016 bytes, differs from plaintext)
+
+Checks:
+  any key column in schema:     False
+  decryption key present in db: False
+  plaintext marker in ciphertext: False

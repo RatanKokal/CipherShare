@@ -1,0 +1,173 @@
+CipherShare attribution threshold evaluation
+captured: 28 October 2026 | code revision: 47b7f8a
+command: python tools/evaluate.py  (writes this file)
+randomness: numpy default_rng master seed 20261028 (single stream, deterministic given the code revision); xorshift32 seeds are fixed constants in fingerprint_mirror.py (positions 0x43533153, biases 0x54415244)
+parameters: codeword bits=512, repetition=3, slots=1536, thresholds=[48, 64, 80, 96, 112, 128, 144, 160]
+budgets: FAR_TRIALS=50000, DET_TRIALS=5000, TRANSFORM_TRIALS=30, image dim=512
+
+1. Fixture validation gate (production code, not the vectorized path)
+   JS-embedded pixel buffer extracts to the JS codeword: True
+   factorized scorer == production scorer: 485.3469 vs 485.3469 -> True
+   single-member strategy reproduces the codeword exactly: True
+   per-slot 2-mix y differs from BOTH members' codewords (reviewer's point): True
+   pixel-level 2-collusion fixture traced to a coalition member: True
+   gate result: PASS
+
+2. Per-candidate false accusation rate (innocent-only trials, BER=0)
+   rule of three: zero events in N draws -> 95% CI upper bound = 3/N
+   n=    2: 50,000 innocent draws (held-out half)
+     T>= 48: per-candidate FAR 1.73e-02 | family-wise(exceeds) 3.42e-02
+     T>= 64: per-candidate FAR 2.20e-03 | family-wise(exceeds) 4.36e-03
+     T>= 80: per-candidate FAR 2.60e-04 | family-wise(exceeds) 5.20e-04
+     T>= 96: per-candidate FAR 0.00e+00 (0 events, 95% UB 6.0e-05) | family-wise(exceeds) 0.00e+00
+     T>=112: per-candidate FAR 0.00e+00 (0 events, 95% UB 6.0e-05) | family-wise(exceeds) 0.00e+00
+     T>=128: per-candidate FAR 0.00e+00 (0 events, 95% UB 6.0e-05) | family-wise(exceeds) 0.00e+00
+     T>=144: per-candidate FAR 0.00e+00 (0 events, 95% UB 6.0e-05) | family-wise(exceeds) 0.00e+00
+     T>=160: per-candidate FAR 0.00e+00 (0 events, 95% UB 6.0e-05) | family-wise(exceeds) 0.00e+00
+   n=    5: 125,000 innocent draws (held-out half)
+     T>= 48: per-candidate FAR 1.68e-02 | family-wise(exceeds) 8.13e-02
+     T>= 64: per-candidate FAR 2.43e-03 | family-wise(exceeds) 1.21e-02
+     T>= 80: per-candidate FAR 1.92e-04 | family-wise(exceeds) 9.60e-04
+     T>= 96: per-candidate FAR 0.00e+00 (0 events, 95% UB 2.4e-05) | family-wise(exceeds) 0.00e+00
+     T>=112: per-candidate FAR 0.00e+00 (0 events, 95% UB 2.4e-05) | family-wise(exceeds) 0.00e+00
+     T>=128: per-candidate FAR 0.00e+00 (0 events, 95% UB 2.4e-05) | family-wise(exceeds) 0.00e+00
+     T>=144: per-candidate FAR 0.00e+00 (0 events, 95% UB 2.4e-05) | family-wise(exceeds) 0.00e+00
+     T>=160: per-candidate FAR 0.00e+00 (0 events, 95% UB 2.4e-05) | family-wise(exceeds) 0.00e+00
+   n=   20: 500,000 innocent draws (held-out half)
+     T>= 48: per-candidate FAR 1.70e-02 | family-wise(exceeds) 2.87e-01
+     T>= 64: per-candidate FAR 2.29e-03 | family-wise(exceeds) 4.48e-02
+     T>= 80: per-candidate FAR 1.80e-04 | family-wise(exceeds) 3.60e-03
+     T>= 96: per-candidate FAR 2.00e-06 | family-wise(exceeds) 4.00e-05
+     T>=112: per-candidate FAR 0.00e+00 (0 events, 95% UB 6.0e-06) | family-wise(exceeds) 0.00e+00
+     T>=128: per-candidate FAR 0.00e+00 (0 events, 95% UB 6.0e-06) | family-wise(exceeds) 0.00e+00
+     T>=144: per-candidate FAR 0.00e+00 (0 events, 95% UB 6.0e-06) | family-wise(exceeds) 0.00e+00
+     T>=160: per-candidate FAR 0.00e+00 (0 events, 95% UB 6.0e-06) | family-wise(exceeds) 0.00e+00
+   n=  100: 2,500,000 innocent draws (held-out half)
+     T>= 48: per-candidate FAR 1.68e-02 | family-wise(exceeds) 8.16e-01
+     T>= 64: per-candidate FAR 2.23e-03 | family-wise(exceeds) 2.00e-01
+     T>= 80: per-candidate FAR 1.73e-04 | family-wise(exceeds) 1.72e-02
+     T>= 96: per-candidate FAR 9.20e-06 | family-wise(exceeds) 9.20e-04
+     T>=112: per-candidate FAR 1.60e-06 | family-wise(exceeds) 1.60e-04
+     T>=128: per-candidate FAR 0.00e+00 (0 events, 95% UB 1.2e-06) | family-wise(exceeds) 0.00e+00
+     T>=144: per-candidate FAR 0.00e+00 (0 events, 95% UB 1.2e-06) | family-wise(exceeds) 0.00e+00
+     T>=160: per-candidate FAR 0.00e+00 (0 events, 95% UB 1.2e-06) | family-wise(exceeds) 0.00e+00
+   n= 1000: 25,000,000 innocent draws (held-out half)
+     T>= 48: per-candidate FAR 1.68e-02 | family-wise(exceeds) 1.00e+00
+     T>= 64: per-candidate FAR 2.27e-03 | family-wise(exceeds) 8.96e-01
+     T>= 80: per-candidate FAR 1.92e-04 | family-wise(exceeds) 1.76e-01
+     T>= 96: per-candidate FAR 9.36e-06 | family-wise(exceeds) 9.36e-03
+     T>=112: per-candidate FAR 1.20e-07 | family-wise(exceeds) 1.20e-04
+     T>=128: per-candidate FAR 0.00e+00 (0 events, 95% UB 1.2e-07) | family-wise(exceeds) 0.00e+00
+     T>=144: per-candidate FAR 0.00e+00 (0 events, 95% UB 1.2e-07) | family-wise(exceeds) 0.00e+00
+     T>=160: per-candidate FAR 0.00e+00 (0 events, 95% UB 1.2e-07) | family-wise(exceeds) 0.00e+00
+
+   BER-invariance side-check (n=20, 10k trials per condition):
+     BER=0.00: per-candidate FAR at T>=96 = 1.00e-05
+     BER=0.05: per-candidate FAR at T>=96 = 0.00e+00
+
+3. Detection study (slot-level attacks; y built per-slot, then majority-voted)
+   miss = P(no member >= T) | cfar = P(any innocent exceeds | detected) |
+   fp-acc = P(tracer accuses an innocent)
+   candidate population n=20; 5000 held-out trials per cell
+   c=1 strategy=single-member
+     BER    | T=80 miss / cfar / fp-acc | T=96 miss / cfar / fp-acc | T=112 miss / cfar / fp-acc | T=128 miss / cfar / fp-acc 
+     0.000  | 0.000 / 4.2e-03 / 0.0e+00 | 0.000 / 2.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.005  | 0.000 / 4.4e-03 / 0.0e+00 | 0.000 / 2.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.010  | 0.000 / 2.4e-03 / 0.0e+00 | 0.000 / 4.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.020  | 0.000 / 4.6e-03 / 0.0e+00 | 0.000 / 2.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.050  | 0.000 / 3.6e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.100  | 0.000 / 3.2e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+   c=2 strategy=random-per-slot
+     BER    | T=80 miss / cfar / fp-acc | T=96 miss / cfar / fp-acc | T=112 miss / cfar / fp-acc | T=128 miss / cfar / fp-acc 
+     0.000  | 0.000 / 2.6e-03 / 0.0e+00 | 0.000 / 2.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.005  | 0.000 / 1.8e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.010  | 0.000 / 1.2e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.020  | 0.000 / 3.0e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.050  | 0.000 / 4.4e-03 / 0.0e+00 | 0.000 / 2.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.100  | 0.000 / 3.2e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+   c=2 strategy=single-member
+     BER    | T=80 miss / cfar / fp-acc | T=96 miss / cfar / fp-acc | T=112 miss / cfar / fp-acc | T=128 miss / cfar / fp-acc 
+     0.000  | 0.000 / 2.4e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.005  | 0.000 / 4.0e-03 / 0.0e+00 | 0.000 / 6.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.010  | 0.000 / 4.2e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.020  | 0.000 / 4.4e-03 / 0.0e+00 | 0.000 / 2.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.050  | 0.000 / 2.8e-03 / 0.0e+00 | 0.000 / 6.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.100  | 0.000 / 2.4e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+   c=2 strategy=erasure
+     BER    | T=80 miss / cfar / fp-acc | T=96 miss / cfar / fp-acc | T=112 miss / cfar / fp-acc | T=128 miss / cfar / fp-acc 
+     0.000  | 0.000 / 3.2e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.005  | 0.000 / 2.6e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.010  | 0.000 / 4.2e-03 / 0.0e+00 | 0.000 / 4.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.020  | 0.000 / 2.2e-03 / 0.0e+00 | 0.000 / 2.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.050  | 0.000 / 2.8e-03 / 0.0e+00 | 0.000 / 4.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.100  | 0.000 / 4.2e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+   c=3 strategy=random-per-slot
+     BER    | T=80 miss / cfar / fp-acc | T=96 miss / cfar / fp-acc | T=112 miss / cfar / fp-acc | T=128 miss / cfar / fp-acc 
+     0.000  | 0.000 / 4.2e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.005  | 0.000 / 3.0e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.010  | 0.000 / 4.2e-03 / 0.0e+00 | 0.000 / 4.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.020  | 0.000 / 4.2e-03 / 0.0e+00 | 0.000 / 4.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.050  | 0.000 / 4.0e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.100  | 0.000 / 3.8e-03 / 0.0e+00 | 0.000 / 2.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.012 / 0.0e+00 / 0.0e+00 
+   c=3 strategy=single-member
+     BER    | T=80 miss / cfar / fp-acc | T=96 miss / cfar / fp-acc | T=112 miss / cfar / fp-acc | T=128 miss / cfar / fp-acc 
+     0.000  | 0.000 / 3.4e-03 / 0.0e+00 | 0.000 / 6.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.005  | 0.000 / 4.2e-03 / 0.0e+00 | 0.000 / 6.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.010  | 0.000 / 3.0e-03 / 0.0e+00 | 0.000 / 6.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.020  | 0.000 / 3.6e-03 / 0.0e+00 | 0.000 / 2.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.050  | 0.000 / 2.6e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.100  | 0.000 / 3.4e-03 / 0.0e+00 | 0.000 / 2.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+   c=3 strategy=majority
+     BER    | T=80 miss / cfar / fp-acc | T=96 miss / cfar / fp-acc | T=112 miss / cfar / fp-acc | T=128 miss / cfar / fp-acc 
+     0.000  | 0.000 / 3.2e-03 / 0.0e+00 | 0.000 / 4.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.005  | 0.000 / 3.4e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.010  | 0.000 / 2.6e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.020  | 0.000 / 2.8e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.050  | 0.000 / 3.4e-03 / 0.0e+00 | 0.000 / 2.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+     0.100  | 0.000 / 3.4e-03 / 0.0e+00 | 0.000 / 4.0e-04 / 0.0e+00 | 0.000 / 2.0e-04 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 
+   c=3 strategy=anti-majority
+     BER    | T=80 miss / cfar / fp-acc | T=96 miss / cfar / fp-acc | T=112 miss / cfar / fp-acc | T=128 miss / cfar / fp-acc 
+     0.000  | 1.000 / nan / 2.6e-03 | 1.000 / nan / 0.0e+00 | 1.000 / nan / 0.0e+00 | 1.000 / nan / 0.0e+00 
+     0.005  | 1.000 / nan / 2.2e-03 | 1.000 / nan / 2.0e-04 | 1.000 / nan / 0.0e+00 | 1.000 / nan / 0.0e+00 
+     0.010  | 1.000 / nan / 4.4e-03 | 1.000 / nan / 4.0e-04 | 1.000 / nan / 0.0e+00 | 1.000 / nan / 0.0e+00 
+     0.020  | 1.000 / nan / 2.8e-03 | 1.000 / nan / 4.0e-04 | 1.000 / nan / 0.0e+00 | 1.000 / nan / 0.0e+00 
+     0.050  | 1.000 / nan / 2.8e-03 | 1.000 / nan / 4.0e-04 | 1.000 / nan / 0.0e+00 | 1.000 / nan / 0.0e+00 
+     0.100  | 1.000 / nan / 3.4e-03 | 1.000 / nan / 4.0e-04 | 1.000 / nan / 0.0e+00 | 1.000 / nan / 0.0e+00 
+   c=3 strategy=erasure
+     BER    | T=80 miss / cfar / fp-acc | T=96 miss / cfar / fp-acc | T=112 miss / cfar / fp-acc | T=128 miss / cfar / fp-acc 
+     0.000  | 0.000 / 3.2e-03 / 0.0e+00 | 0.000 / 2.0e-04 / 0.0e+00 | 0.003 / 0.0e+00 / 0.0e+00 | 0.062 / 0.0e+00 / 0.0e+00 
+     0.005  | 0.000 / 4.2e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.005 / 0.0e+00 / 0.0e+00 | 0.081 / 0.0e+00 / 0.0e+00 
+     0.010  | 0.000 / 4.2e-03 / 0.0e+00 | 0.000 / 2.0e-04 / 0.0e+00 | 0.005 / 0.0e+00 / 0.0e+00 | 0.088 / 0.0e+00 / 0.0e+00 
+     0.020  | 0.000 / 2.8e-03 / 0.0e+00 | 0.000 / 0.0e+00 / 0.0e+00 | 0.010 / 0.0e+00 / 0.0e+00 | 0.124 / 0.0e+00 / 0.0e+00 
+     0.050  | 0.000 / 3.8e-03 / 0.0e+00 | 0.002 / 0.0e+00 / 0.0e+00 | 0.044 / 0.0e+00 / 0.0e+00 | 0.267 / 0.0e+00 / 0.0e+00 
+     0.100  | 0.001 / 3.2e-03 / 0.0e+00 | 0.030 / 2.1e-04 / 0.0e+00 | 0.221 / 0.0e+00 / 0.0e+00 | 0.587 / 0.0e+00 / 0.0e+00 
+
+   per-member attribution at T=96, BER=0 (share of all trials accusing each member):
+     c=2 random-per-slot: m1=0.503, m2=0.497
+     c=2 erasure: m1=0.496, m2=0.504
+     c=3 random-per-slot: m1=0.340, m2=0.327, m3=0.333
+     c=3 erasure: m1=0.349, m2=0.334, m3=0.317
+
+4. Real-image transform survival (separate axis from synthetic BER)
+   production embed into 512x512 RGBA PNG, transform, production extract+accuse
+   re-save PNG (lossless)    : 30/30 still accused as the leaker
+   JPEG re-encode q=90       : 0/30 still accused as the leaker
+   JPEG re-encode q=75       : 0/30 still accused as the leaker
+   JPEG re-encode q=50       : 0/30 still accused as the leaker
+   resize 0.9x LANCZOS       : 0/30 still accused as the leaker
+   resize 0.5x LANCZOS       : 0/30 still accused as the leaker
+   crop 10% borders          : 0/30 still accused as the leaker
+
+5. Threshold calibration (calibration half only) and held-out verdict
+   calibration rule: smallest threshold with per-candidate FAR <= 1e-4 at n=20
+   calibrated threshold T* = 96
+   held-out per-candidate FAR at T*: 2.00e-06
+   held-out per-candidate FAR at legacy 96: 2.00e-06
+
+6. Statistical power statement
+   zero-event resolution floor at n=20: FAR >= 6.0e-06 (rule of three)
+   draws at n=20: 500,000; draws at n=1000: 25,000,000
+   a per-candidate 1e-6 claim needs >= 3e6 independent innocent draws
+   n=1000 run resolves 1e-6: measured per-candidate FAR at T>=96 = 9.36e-06 -> claim NOT SUPPORTED at that population
+
+   production threshold constant: 96 (any change is a separate commit)

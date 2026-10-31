@@ -1,0 +1,16 @@
+CipherShare - network request log for the recipient flow (T7 / SR4)
+Captured: 28 October 2026 via Playwright browser instrumentation
+Share: Y746EJ3jxWgYaMsPFeymzdHup-gsWsho (password-protected, personalized)
+
+Requests observed during download attempts (fragment never transmitted):
+  [GET] /shares/Y746EJ3jxWgYaMsPFeymzdHup-gsWsho => 200 OK   (correct password)
+  [GET] /shares/Y746EJ3jxWgYaMsPFeymzdHup-gsWsho => 200 OK   (wrong password attempt)
+  (+ 5 static asset requests: /, style.css, app.js, crypto.js, marking.js)
+
+Verification:
+  - No request URL, body, or header contains the key, the password,
+    the link half R, the marking token, or the fragment (the browser
+    never sends fragment content to the server).
+  - Two identical GETs correspond to the correct-password download and
+    the wrong-password attempt; both returned the same ciphertext.
+  - The uvicorn access log (server side) records request lines only.

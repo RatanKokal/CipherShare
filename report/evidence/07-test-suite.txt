@@ -1,0 +1,36 @@
+CipherShare Stage I - automated test-suite transcript
+Captured: 20 October 2026
+Working directory: /home/ratan/coursework/cs416/project
+
+Command:
+  python3 -m pytest -q
+
+Output:
+  ..................                                                       [100%]
+  18 passed in 0.68s
+
+Command:
+  node --test tests/crypto.test.mjs
+
+Output summary:
+  # tests 9
+  # suites 0
+  # pass 9
+  # fail 0
+  # cancelled 0
+  # skipped 0
+  # todo 0
+
+Node test names:
+  ok 1 - text file round trip preserves exact bytes
+  ok 2 - binary file round trip preserves exact bytes
+  ok 3 - empty file round trip preserves zero length
+  ok 4 - tampered ciphertext is rejected
+  ok 5 - tampered tag is rejected
+  ok 6 - truncated ciphertext is rejected
+  ok 7 - modified nonce is rejected
+  ok 8 - wrong key is rejected
+  ok 9 - base64url encoding round trips key bytes
+
+Result:
+  18 pytest tests passed, 9 Node tests passed, 0 failures.

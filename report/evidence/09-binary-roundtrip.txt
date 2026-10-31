@@ -1,0 +1,18 @@
+CipherShare final build - real-file round trip
+Captured: 28 October 2026 (final build: password split + recipient tokens in the API)
+Server: http://127.0.0.1:8000 (uvicorn, local test instance)
+Harness: Node 22.23.1 + static/crypto.js Web Crypto module
+
+Method:
+  The harness generated a fresh AES-256-GCM key and 96-bit nonce, encrypted the
+  file locally, uploaded it with a password split (salt + KDF iterations) and two
+  recipients, downloaded by share id, reconstructed K = R XOR W, decrypted with
+  the returned nonce, and compared SHA-256 digests and exact bytes.
+
+PASS final-report-excerpt.pdf plaintext=200000 ciphertext=200016
+     create=201 (password_protected=true, 2 recipients) download=200
+     SHA-256 original:  d3c7453a29f854ac8f3935312a653e2170f7e8493017d1704443cb87c43bc734
+     SHA-256 recovered: d3c7453a29f854ac8f3935312a653e2170f7e8493017d1704443cb87c43bc734
+
+Note: captured on the final build; the Stage I capture in git history used the
+label-based API before the token scheme.
